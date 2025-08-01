@@ -3,39 +3,731 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title></title>
+    <title>NVIDIA 驱动程序推荐助手 - 爱玩的极客</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        :root {
+            --primary-color: #76b900;
+            --primary-dark: #5d9400;
+            --secondary-color: #333;
+            --light-bg: #f5f5f5;
+            --card-bg: #ffffff;
+            --text-color: #333;
+            --light-text: #666;
+            --border-radius: 12px;
+            --box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
-            font-family: 'Microsoft YaHei', sans-serif;
-            max-width: 800px;
+            font-family: 'Segoe UI', 'Microsoft YaHei', Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
-            line-height: 1.6;
-            color: #333;
-            background-color: #f5f5f5;
+            color: var(--text-color);
+            background-color: var(--light-bg);
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(118, 185, 0, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(118, 185, 0, 0.05) 0%, transparent 20%);
         }
-        .container {
-            background-color: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px 0;
+            position: relative;
         }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), transparent);
+            border-radius: 2px;
+        }
+
         h1 {
-            color: #d9534f;
-            margin-bottom: 20px;
-            font-size: 48px;
-            border-left: 4px solid #d9534f;
-            padding-left: 15px;
+            color: var(--primary-color);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-      
+
+        .subtitle {
+            color: var(--light-text);
+            font-size: 1.1rem;
+            font-weight: 400;
+        }
+
+        h2 {
+            color: var(--secondary-color);
+            font-size: 1.8rem;
+            margin: 30px 0 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary-color);
+            position: relative;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 60px;
+            height: 2px;
+            background-color: var(--primary-color);
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 25px;
+            margin-bottom: 25px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 6px;
+            height: 100%;
+            background-color: var(--primary-color);
+            opacity: 0.7;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        }
+
+        .driver-version {
+            font-weight: bold;
+            color: var(--primary-color);
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .driver-version i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+
+        .recommendation {
+            margin: 15px 0;
+            padding: 15px;
+            border-left: 3px solid var(--primary-color);
+            background-color: rgba(118, 185, 0, 0.05);
+            border-radius: 0 8px 8px 0;
+        }
+
+        .download-links {
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            box-shadow: 0 2px 5px rgba(118, 185, 0, 0.3);
+        }
+
+        .download-btn i {
+            margin-right: 8px;
+        }
+
+        .download-btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(118, 185, 0, 0.4);
+        }
+
+        .note {
+            font-size: 0.9rem;
+            color: var(--light-text);
+            font-style: italic;
+            margin-top: 10px;
+        }
+
+        .gpu-series {
+            font-weight: bold;
+            margin: 25px 0 15px;
+            color: var(--secondary-color);
+            font-size: 1.3rem;
+            padding-left: 15px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .version-section {
+            margin-bottom: 25px;
+            padding: 20px;
+            background-color: rgba(245, 245, 245, 0.7);
+            border-radius: 10px;
+            transition: var(--transition);
+        }
+
+        .version-section:hover {
+            background-color: rgba(245, 245, 245, 0.9);
+        }
+
+        .custom-download {
+            background: linear-gradient(135deg, #f8f9fa, #e9f7e9);
+            padding: 25px;
+            border-radius: var(--border-radius);
+            margin-bottom: 30px;
+            box-shadow: var(--box-shadow);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--secondary-color);
+        }
+
+        select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: white;
+            font-size: 1rem;
+            transition: var(--transition);
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M10.293 3.293L6 7.586 1.707 3.293A1 1 0 00.293 4.707l5 5a1 1 0 001.414 0l5-5a1 1 0 10-1.414-1.414z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            padding-right: 40px;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(118, 185, 0, 0.2);
+        }
+
+        .generate-btn {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .generate-btn i {
+            margin-right: 8px;
+        }
+
+        .generate-btn:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .result-link {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f0f0f0;
+            border-radius: 8px;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .old-card {
+            background: linear-gradient(135deg, #fff8e1, #ffecb3);
+            border-left: 4px solid #ffc107;
+        }
+
+        .old-card h3 {
+            color: var(--secondary-color);
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .old-card h3 i {
+            margin-right: 10px;
+            color: #ffc107;
+        }
+
+        .old-card .download-btn {
+            background-color: #ffc107;
+            color: var(--secondary-color);
+        }
+
+        .old-card .download-btn:hover {
+            background-color: #e0a800;
+        }
+
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-left: 10px;
+            font-weight: 500;
+        }
+
+        .tag i {
+            margin-right: 4px;
+            font-size: 0.7rem;
+        }
+
+        .tag-best {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .tag-high {
+            background-color: #2196F3;
+            color: white;
+        }
+
+        .tag-stable {
+            background-color: #FFC107;
+            color: var(--secondary-color);
+        }
+
+        .full-list {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--box-shadow);
+        }
+
+        .full-list th, .full-list td {
+            padding: 15px;
+            text-align: left;
+        }
+
+        .full-list th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+        }
+
+        .full-list td {
+            border-bottom: 1px solid #eee;
+        }
+
+        .full-list tr:last-child td {
+            border-bottom: none;
+        }
+
+        .full-list tr:nth-child(even) {
+            background-color: rgba(245, 245, 245, 0.5);
+        }
+
+        .full-list tr:hover {
+            background-color: rgba(118, 185, 0, 0.05);
+        }
+
+        .version-highlight {
+            background-color: rgba(118, 185, 0, 0.1) !important;
+        }
+
+        .version-number {
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        ol, ul {
+            padding-left: 25px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+            
+            .download-links {
+                flex-direction: column;
+            }
+            
+            .download-btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .full-list {
+                font-size: 0.9rem;
+            }
+            
+            .full-list th, .full-list td {
+                padding: 10px;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>黄泳洳你再发你就等死</h1>
-        <h1>你这样有意思吗</h1>
-        
-        
+    <div class="header">
+        <h1><i class="fas fa-microchip"></i> NVIDIA 驱动程序推荐助手</h1>
+        <p class="subtitle">爱玩的极客 - 为您的显卡选择最佳驱动</p>
     </div>
+    
+    <!-- 手动选择驱动版本 -->
+    <div class="custom-download card">
+        <h2><i class="fas fa-sliders-h"></i> 手动选择驱动版本</h2>
+        <div class="form-group">
+            <label for="version"><i class="fas fa-code-branch"></i> 驱动程序版本号：</label>
+            <select id="version">
+                <option value="576.02">576.02 (RTX 50系列专用)</option>
+                <option value="566.36">566.36 (RTX 40/30系列优化)</option>
+                <option value="566.14">566.14 (RTX 40/30系列优化)</option>
+                <option value="560.94">560.94 (RTX 40/30系列优化)</option>
+                <option value="552.22">552.22 (RTX 20/30/40系列通用)</option>
+                <option value="551.52">551.52 (竞技游戏优化)</option>
+                <option value="537.42">537.42 (GTX 10/20系列专用)</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="deviceType"><i class="fas fa-desktop"></i> 设备类型：</label>
+            <select id="deviceType">
+                <option value="desktop">台式机</option>
+                <option value="notebook">笔记本</option>
+            </select>
+        </div>
+        <button class="generate-btn" onclick="generateDownloadLink()">
+            <i class="fas fa-download"></i> 生成下载链接
+        </button>
+        <div class="result-link" id="downloadResult">
+            <a id="downloadLink" class="download-btn" href="#" target="_blank">
+                <i class="fas fa-file-download"></i> 点击这里下载
+            </a>
+        </div>
+    </div>
+    
+    <!-- 完整驱动列表 -->
+    <div class="card">
+        <h2><i class="fas fa-list"></i> 完整驱动程序列表 (10/20/30/40/50系)</h2>
+        <table class="full-list">
+            <thead>
+                <tr>
+                    <th><i class="fas fa-tv"></i> 适用显卡</th>
+                    <th><i class="fas fa-tag"></i> 版本号</th>
+                    <th><i class="fas fa-calendar-alt"></i> 发布日期</th>
+                    <th><i class="fas fa-star"></i> 特性标签</th>
+                    <th><i class="fas fa-download"></i> 下载链接</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="version-highlight">
+                    <td><i class="fas fa-bolt"></i> RTX 50系列</td>
+                    <td class="version-number">576.02</td>
+                    <td>2025-04-17</td>
+                    <td>
+                        <span class="tag tag-best"><i class="fas fa-check"></i> 最推荐</span>
+                        <span class="tag"><i class="fas fa-tools"></i> 修复40+问题</span>
+                    </td>
+                    <td>
+                        <a href="https://www.nvidia.com/content/DriverDownloads/confirmation.php?url=/Windows/576.02/576.02-desktop-win10-win11-64bit-international-dch-whql.exe&lang=cn&type=GeForce" class="download-btn">
+                            <i class="fas fa-desktop"></i> 台式机
+                        </a>
+                        <a href="https://www.nvidia.com/content/DriverDownloads/confirmation.php?url=/Windows/576.02/576.02-notebook-win10-win11-64bit-international-dch-whql.exe&lang=cn&type=GeForce" class="download-btn">
+                            <i class="fas fa-laptop"></i> 笔记本
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td><i class="fas fa-gamepad"></i> RTX 20/30/40系列</td>
+                    <td class="version-number">552.22</td>
+                    <td>2024-04-16</td>
+                    <td>
+                        <span class="tag tag-high"><i class="fas fa-crosshairs"></i> 射击游戏专用</span>
+                        <span class="tag"><i class="fas fa-trophy"></i> CSGO/无畏契约</span>
+                    </td>
+                    <td>
+                        <a href="https://www.nvidia.com/content/DriverDownloads/confirmation.php?url=/Windows/552.22/552.22-desktop-win10-win11-64bit-international-nsd-dch-whql.exe&lang=cn&type=GeForce" class="download-btn">
+                            <i class="fas fa-desktop"></i> 台式机
+                        </a>
+                        <a href="https://www.nvidia.com/content/DriverDownloads/confirmation.php?url=/Windows/552.22/552.22-notebook-win10-win11-64bit-international-nsd-dch-whql.exe&lang=cn&type=GeForce" class="download-btn">
+                            <i class="fas fa-laptop"></i> 笔记本
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td><i class="fas fa-rocket"></i> RTX 40/30系列</td>
+                    <td class="version-number">566.36</td>
+                    <td>2024-12-06</td>
+                    <td>
+                        <span class="tag tag-stable"><i class="fas fa-shield-alt"></i> 官方推荐</span>
+                        <span class="tag"><i class="fas fa-plane"></i> 三角洲/PUBG稳定</span>
+                    </td>
+                    <td>
+                        <a href="https://www.nvidia.com/content/DriverDownloads/confirmation.php?url=/Windows/566.36/566.36-desktop-win10-win11-64bit-international-dch-whql.exe&lang=cn&type=GeForce" class="download-btn">
+                            <i class="fas fa-desktop"></i> 台式机
+                        </a>
+                        <a href="https://www.nvidia.com/content/DriverDownloads/confirmation.php?url=/Windows/566.36/566.36-notebook-win10-win11-64bit-international-dch-whql.exe&lang=cn&type=GeForce" class="download-btn">
+                            <i class="fas fa-laptop"></i> 笔记本
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td><i class="fas fa-rocket"></i> RTX 40/30系列</td>
+                    <td class="version-number">566.14</td>
+                    <td>2024-11-12</td>
+                    <td>
+                        <span class="tag tag-stable"><i class="fas fa-chart-line"></i> 稳定版</span>
+                        <span class="tag"><i class="fas fa-tachometer-alt"></i> 帧数稳定</span>
+                    </td>
+                    <td>
+                        <a href="https://www.nvidia.com/content/DriverDownloads/confirmation.php?url=/Windows/566.14/566.14-desktop-win10-win11-64bit-international-dch-whql.exe&lang=cn&type=GeForce" class="download-btn">
+                            <i class="fas fa-desktop"></i> 台式机
+                        </a>
+                        <a href="https://www.nvidia.com/content/DriverDownloads/confirmation.php?url=/Windows/566.14/566.14-notebook-win10-win11-64bit-international-dch-whql.exe&lang=cn&type=GeForce" class="download-btn">
+                            <i class="fas fa-laptop"></i> 笔记本
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td><i class="fas fa-rocket"></i> RTX 40/30系列</td>
+                    <td class="version-number">560.94</td>
+                    <td>2024-08-20</td>
+                    <td>
+                        <span class="tag tag-high"><i class="fas fa-gamepad"></i> 3A游戏专用</span>
+                        <span class="tag"><i class="fab fa-steam"></i> Steam游戏</span>
+                    </td>
+                    <td>
+                        <a href="https://www.nvidia.com/content/DriverDownloads/confirmation.php?url=/Windows/560.94/560.94-desktop-win10-win11-64bit-international-dch-whql.exe&lang=cn&type=GeForce" class="download-btn">
+                            <i class="fas fa-desktop"></i> 台式机
+                        </a>
+                        <a href="https://www.nvidia.com/content/DriverDownloads/confirmation.php?url=/Windows/560.94/560.94-notebook-win10-win11-64bit-international-dch-whql.exe&lang=cn&type=GeForce" class="download-btn">
+                            <i class="fas fa-laptop"></i> 笔记本
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td><i class="fas fa-history"></i> GTX 10/20系列</td>
+                    <td class="version-number">537.42</td>
+                    <td>2023-08-22</td>
+                    <td>
+                        <span class="tag tag-stable"><i class="fas fa-history"></i> 老卡专用</span>
+                        <span class="tag"><i class="fas fa-check-circle"></i> 兼容性好</span>
+                    </td>
+                    <td>
+                        <a href="https://www.nvidia.com/content/DriverDownloads/confirmation.php?url=/Windows/537.42/537.42-desktop-win10-win11-64bit-international-dch-whql.exe&lang=cn&type=GeForce" class="download-btn">
+                            <i class="fas fa-desktop"></i> 台式机
+                        </a>
+                        <a href="https://www.nvidia.com/content/DriverDownloads/confirmation.php?url=/Windows/537.42/537.42-notebook-win10-win11-64bit-international-dch-whql.exe&lang=cn&type=GeForce" class="download-btn">
+                            <i class="fas fa-laptop"></i> 笔记本
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="card">
+        <h2><i class="fas fa-thumbs-up"></i> 驱动程序版本推荐</h2>
+        
+        <div class="gpu-series"><i class="fas fa-bolt"></i> 40系/30系显卡</div>
+        
+        <div class="version-section">
+            <div class="driver-version">
+                <i class="fas fa-star"></i> 566.36 <span class="tag tag-stable"><i class="fas fa-shield-alt"></i> 官方推荐</span>
+            </div>
+            <div class="recommendation">
+                <i class="fas fa-info-circle"></i> 推荐用于《三角洲行动》/《PUBG绝地求生》(官方推荐稳定性最好)
+            </div>
+            <div class="download-links">
+                <a href="https://www.nvidia.com/content/DriverDownloads/confirmation.php?url=/Windows/566.36/566.36-desktop-win10-win11-64bit-international-dch-whql.exe&lang=cn&type=GeForce" class="download-btn">
+                    <i class="fas fa-desktop"></i> 台式机下载
+                </a>
+                <a href="https://www.nvidia.com/content/DriverDownloads/confirmation.php?url=/Windows/566.36/566.36-notebook-win10-win11-64bit-international-dch-whql.exe&lang=cn&type=GeForce" class="download-btn">
+                    <i class="fas fa-laptop"></i> 笔记本下载
+                </a>
+            </div>
+        </div>
+        
+        <div class="version-section">
+            <div class="driver-version">
+                <i class="fas fa-chart-line"></i> 566.14 <span class="tag tag-stable"><i class="fas fa-chart-line"></i> 稳定版</span>
+            </div>
+            <div class="recommendation">
+                <i class="fas fa-info-circle"></i> 推荐用于《三角洲行动》/《PUBG绝地求生》(帧数稳定版本)
+            </div>
+            <div class="download-links">
+                <a href="https://www.nvidia.com/content/DriverDownloads/confirmation.php?url=/Windows/566.14/566.14-desktop-win10-win11-64bit-international-dch-whql.exe&lang=cn&type=GeForce" class="download-btn">
+                    <i class="fas fa-desktop"></i> 台式机下载
+                </a>
+                <a href="https://www.nvidia.com/content/DriverDownloads/confirmation.php?url=/Windows/566.14/566.14-notebook-win10-win11-64bit-international-dch-whql.exe&lang=cn&type=GeForce" class="download-btn">
+                    <i class="fas fa-laptop"></i> 笔记本下载
+                </a>
+            </div>
+        </div>
+        
+        <div class="version-section">
+            <div class="driver-version">
+                <i class="fas fa-crosshairs"></i> 552.22 <span class="tag tag-high"><i class="fas fa-crosshairs"></i> 射击游戏专用-超高帧数</span>
+            </div>
+            <div class="recommendation">
+                <i class="fas fa-info-circle"></i> 推荐用于《CSGO》/《无畏契约》(射击游戏专用版本)
+            </div>
+            <div class="download-links">
+                <a href="https://www.nvidia.com/content/DriverDownloads/confirmation.php?url=/Windows/552.22/552.22-desktop-win10-win11-64bit-international-nsd-dch-whql.exe&lang=cn&type=GeForce" class="download-btn">
+                    <i class="fas fa-desktop"></i> 台式机下载
+                </a>
+                <a href="https://www.nvidia.com/content/DriverDownloads/confirmation.php?url=/Windows/552.22/552.22-notebook-win10-win11-64bit-international-nsd-dch-whql.exe&lang=cn&type=GeForce" class="download-btn">
+                    <i class="fas fa-laptop"></i> 笔记本下载
+                </a>
+            </div>
+        </div>
+        
+        <div class="gpu-series"><i class="fas fa-history"></i> 20系/10系显卡</div>
+        
+        <div class="version-section">
+            <div class="driver-version">
+                <i class="fas fa-gamepad"></i> 560.94 <span class="tag tag-high"><i class="fas fa-gamepad"></i> 3A优化</span>
+            </div>
+            <div class="recommendation">
+                <i class="fas fa-info-circle"></i> 2020年之后的3A大作推荐
+            </div>
+            <div class="download-links">
+                <a href="https://www.nvidia.com/content/DriverDownloads/confirmation.php?url=/Windows/560.94/560.94-desktop-win10-win11-64bit-international-dch-whql.exe&lang=cn&type=GeForce" class="download-btn">
+                    <i class="fas fa-desktop"></i> 台式机下载
+                </a>
+                <a href="https://www.nvidia.com/content/DriverDownloads/confirmation.php?url=/Windows/560.94/560.94-notebook-win10-win11-64bit-international-dch-whql.exe&lang=cn&type=GeForce" class="download-btn">
+                    <i class="fas fa-laptop"></i> 笔记本下载
+                </a>
+            </div>
+        </div>
+        
+        <div class="version-section">
+            <div class="driver-version">
+                <i class="fas fa-shield-alt"></i> 537.42 <span class="tag tag-stable"><i class="fas fa-shield-alt"></i> 稳定版</span>
+            </div>
+            <div class="recommendation">
+                <i class="fas fa-info-circle"></i> 通用稳定版本-老游戏-UE游戏支持
+            </div>
+            <div class="download-links">
+                <a href="https://www.nvidia.com/content/DriverDownloads/confirmation.php?url=/Windows/537.42/537.42-desktop-win10-win11-64bit-international-dch-whql.exe&lang=cn&type=GeForce" class="download-btn">
+                    <i class="fas fa-desktop"></i> 台式机下载
+                </a>
+                <a href="https://www.nvidia.com/content/DriverDownloads/confirmation.php?url=/Windows/537.42/537.42-notebook-win10-win11-64bit-international-dch-whql.exe&lang=cn&type=GeForce" class="download-btn">
+                    <i class="fas fa-laptop"></i> 笔记本下载
+                </a>
+            </div>
+        </div>
+        
+        <!-- 老显卡提示 -->
+        <div class="old-card version-section">
+            <h3><i class="fas fa-exclamation-triangle"></i> 980之前的老显卡用户</h3>
+            <p><i class="fas fa-info-circle"></i> 2025年7月1日起，NVIDIA已终止对GTX 700、900及1000系列显卡的驱动支持。</p>
+            <p><i class="fas fa-lightbulb"></i> 对于GeForce 980及更早的显卡，请访问NVIDIA官方驱动查找页面：</p>
+            <div class="download-links">
+                <a href="https://www.nvidia.cn/drivers/lookup/" class="download-btn" target="_blank">
+                    <i class="fas fa-external-link-alt"></i> 前往NVIDIA驱动查找页面
+                </a>
+            </div>
+            <p class="note"><i class="fas fa-info-circle"></i> 该页面将帮助您找到最适合您显卡型号的驱动程序版本。</p>
+        </div>
+    </div>
+    
+    <div class="card">
+        <h2><i class="fas fa-question-circle"></i> 使用说明</h2>
+        <ol>
+            <li><i class="fas fa-search"></i> 根据您的显卡系列选择对应的驱动版本</li>
+            <li><i class="fas fa-gamepad"></i> 根据您主要玩的游戏类型选择推荐的驱动版本</li>
+            <li><i class="fas fa-download"></i> 点击下载按钮将跳转到NVIDIA官方下载确认页面</li>
+            <li><i class="fas fa-file-download"></i> 在NVIDIA页面点击"下载"按钮开始下载</li>
+            <li><i class="fas fa-tools"></i> 安装前建议使用DDU工具清除旧驱动</li>
+        </ol>
+        <p class="note"><i class="fas fa-exclamation-circle"></i> 注意：驱动程序版本可能会影响游戏性能和稳定性，建议根据实际使用情况选择合适的版本。</p>
+    </div>
+    
+    <div class="card">
+        <h2><i class="fas fa-info-circle"></i> 版本特性说明</h2>
+        <ul>
+            <li><strong>576.02</strong> <span class="tag tag-best"><i class="fas fa-check"></i> 最推荐</span> - 修复超过40个重要问题，支持RTX 5060 Ti显卡</li>
+            <li><strong>566.36</strong> - 官方推荐稳定性最好，支持《三角洲行动》等新游戏</li>
+            <li><strong>552.22</strong> <span class="tag tag-high"><i class="fas fa-crosshairs"></i> 射击游戏专用</span> - 针对CSGO、无畏契约等射击游戏优化</li>
+            <li><strong>560.94</strong> - 为3A大作优化，支持Steam平台多款游戏</li>
+            <li><strong>537.42</strong> - 老显卡的稳定版本，兼容性好</li>
+        </ul>
+    </div>
+    
+    <script>
+        function generateDownloadLink() {
+            const version = document.getElementById('version').value;
+            const deviceType = document.getElementById('deviceType').value;
+            
+            if (!version) {
+                alert('请选择驱动程序版本');
+                return;
+            }
+            
+            // 生成下载链接
+            const baseUrl = 'https://www.nvidia.com/content/DriverDownloads/confirmation.php?';
+            const fileType = deviceType === 'desktop' ? 'desktop' : 'notebook';
+            const params = `url=/Windows/${version}/${version}-${fileType}-win10-win11-64bit-international-dch-whql.exe&lang=cn&type=GeForce`;
+            
+            const downloadLink = document.getElementById('downloadLink');
+            downloadLink.href = baseUrl + params;
+            downloadLink.innerHTML = `<i class="fas fa-file-download"></i> 下载 ${version} (${deviceType === 'desktop' ? '台式机' : '笔记本'})`;
+            
+            document.getElementById('downloadResult').style.display = 'block';
+            
+            // 滚动到结果区域
+            document.getElementById('downloadResult').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+    </script>
 </body>
 </html>
